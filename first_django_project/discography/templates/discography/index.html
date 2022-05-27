@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Discography</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Artists{% endblock %}
+
+{% block content %}
 {% if artists %}
 <ul>
     {% for artist in artists %}
-    <li><a href="">{{ artist.name }}</a></li>
+    <li><a href="{% url 'discography:artist_detail' artist.id%}">{{ artist.name }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
 <p>There are not any artists for now</p>
 {% endif %}
-</body>
-</html>
+{% endblock %}

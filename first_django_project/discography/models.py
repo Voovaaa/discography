@@ -12,7 +12,7 @@ class Artist(models.Model):
 class Track(models.Model):
     name = models.CharField(max_length=100)
     date_published = models.DateField()
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="tracks")
 
 
     def __str__(self):
