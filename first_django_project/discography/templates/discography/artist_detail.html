@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Detail{% endblock %}
+
+{% block content %}
+<p>{{ artist.name }}</p>
+
+{% for track in artist.tracks.all %}
+<ul>
+    <p>{{ track.name }} - {{ track.date_published }}</p>
+</ul>
+{% endfor %}
+{% endblock %}
