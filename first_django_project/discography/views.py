@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Artist, Track
+from .forms import TrackForm
 
 
 class IndexView(generic.ListView):
@@ -14,3 +15,8 @@ class ArtistDetailView(generic.DetailView):
     model = Artist
 
 
+class TrackCreateView(generic.CreateView):
+    model = Track
+    template_name = "discography/new_track.html"
+    form_class = TrackForm
+    success_url = "/"

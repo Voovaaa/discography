@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinLengthValidator
+
 
 
 class Artist(models.Model):
@@ -10,7 +12,7 @@ class Artist(models.Model):
 
 
 class Track(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(3, message="Name's len must be more than 2")])
     date_published = models.DateField()
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="tracks")
 

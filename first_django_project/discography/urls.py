@@ -6,4 +6,5 @@ app_name = "discography"
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('<int:pk>/', views.ArtistDetailView.as_view(), name='artist_detail'),
+    path('new_track', views.TrackCreateView.as_view(), name='new_track')
 ]
