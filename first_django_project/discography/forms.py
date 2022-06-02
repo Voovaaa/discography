@@ -1,7 +1,13 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Track
+from .models import Track, Artist
 from django.utils import timezone
+
+
+class ArtistForm(forms.ModelForm):
+    class Meta:
+        model = Artist
+        fields = ["name"]
 
 
 class TrackForm(forms.ModelForm):
