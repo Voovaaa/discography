@@ -10,4 +10,15 @@
 </ul>
 {% endfor %}
 <a href="{% url 'discography:new_track' %}">Add new track</a>
+<br>
+<h5>Comments:</h5>
+<form method="post" autocomplete="off">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+{% for comment in artist.comments.all %}
+{{ comment.text }}
+<br>
+{% endfor %}
 {% endblock %}
