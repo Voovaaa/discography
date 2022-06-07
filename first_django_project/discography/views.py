@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import generic
 from .models import Artist, Track
-from .forms import TrackForm, ArtistForm
+from .forms import TrackForm, ArtistForm, CommentForm
 
 
 class IndexView(generic.ListView):
@@ -10,9 +10,17 @@ class IndexView(generic.ListView):
     model = Artist
 
 
-class ArtistDetailView(generic.DetailView):
+class ArtistDetailView(generic.CreateView, generic.DetailView):
     template_name = 'discography/artist_detail.html'
     model = Artist
+    form_class = CommentForm
+
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.artist_id = self.kwargs['pk']
+        comment.save()
+        return redirect('discography:artist_detail', pk=self.kwargs['pk'])
 
 
 class TrackCreateView(generic.CreateView):
