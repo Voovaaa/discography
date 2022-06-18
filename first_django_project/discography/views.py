@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.views import generic
 from .models import Artist, Track
 from .forms import TrackForm, ArtistForm, CommentForm
+from django.urls import reverse, reverse_lazy
 
 
 class IndexView(generic.ListView):
@@ -18,7 +19,8 @@ class ArtistDetailView(generic.CreateView, generic.DetailView):
 
     def form_valid(self, form):
         comment = form.save(commit=False)
-        comment.artist_id = self.kwargs['pk']
+        pk = self.kwargs['pk']
+        comment.artist_id = pk  # PRIMARY KEY = ID
         comment.save()
         return redirect('discography:artist_detail', pk=self.kwargs['pk'])
 
@@ -27,11 +29,17 @@ class TrackCreateView(generic.CreateView):
     model = Track
     template_name = "discography/new_track.html"
     form_class = TrackForm
-    success_url = "/"
+
+    def form_valid(self, form):
+        track = form.save(commit=False)
+        artist_pk = self.kwargs['pk']
+        track.artist_id = artist_pk
+        track.save()
+        return redirect("discography:artist_detail", pk=track.artist_id)
 
 
 class ArtistCreateView(generic.CreateView):
     model = Artist
     template_name = "discography/new_artist.html"
     form_class = ArtistForm
-    success_url = "/"
+    success_url = reverse_lazy("discography:index")

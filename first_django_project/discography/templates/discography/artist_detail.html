@@ -9,7 +9,7 @@
     <p>{{ track.name }} - {{ track.date_published.year }}, {{ track.date_published.month }}</p>
 </ul>
 {% endfor %}
-<a href="{% url 'discography:new_track' %}">Add new track</a>
+<a href="{% url 'discography:new_track' artist.id %}">Add new track</a>
 <br>
 <h5>Comments:</h5>
 <form method="post" autocomplete="off">
