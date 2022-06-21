@@ -1,8 +1,8 @@
 from django.shortcuts import redirect
 from django.views import generic
-from .models import Artist, Track
-from .forms import TrackForm, ArtistForm, CommentForm
-from django.urls import reverse, reverse_lazy
+from .models import Artist, Track, CustomUser
+from .forms import TrackForm, ArtistForm, CommentForm, CustomUserForm
+from django.urls import reverse_lazy
 
 
 class IndexView(generic.ListView):
@@ -42,4 +42,11 @@ class ArtistCreateView(generic.CreateView):
     model = Artist
     template_name = "discography/new_artist.html"
     form_class = ArtistForm
+    success_url = reverse_lazy("discography:index")
+
+
+class RegistrationView(generic.CreateView):
+    model = CustomUser
+    template_name = "discography/registration.html"
+    form_class = CustomUserForm
     success_url = reverse_lazy("discography:index")
