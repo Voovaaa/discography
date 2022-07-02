@@ -7,5 +7,12 @@
 <body>
 <h1>DISCOGRAPHY</h1>
 {% block content %}{% endblock %}
+<p><a href="{% url 'discography:registration' %}">Sign Up</a></p>
+<p><a href="{% url 'discography:login' %}">Log in</a></p>
+{% if user.is_authenticated %}
+    <p>Authorized as {{ user.get_username }}</p>
+    <p><a href="{% url 'discography:logout' %}">Logout</a></p>
+{% endif %}
+<p><a href="{% url 'discography:index' %}">main page</a></p>
 </body>
 </html>
