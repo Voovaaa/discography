@@ -1,8 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import generic
 from .models import Artist, Track, CustomUser
 from .forms import TrackForm, ArtistForm, CommentForm, CustomUserForm
 from django.urls import reverse_lazy
+from django.contrib.auth import views as auth_views
+from django.contrib.auth import login
 
 
 class IndexView(generic.ListView):
@@ -25,7 +28,8 @@ class ArtistDetailView(generic.CreateView, generic.DetailView):
         return redirect('discography:artist_detail', pk=self.kwargs['pk'])
 
 
-class TrackCreateView(generic.CreateView):
+class TrackCreateView(LoginRequiredMixin, generic.CreateView):
+    login_url = reverse_lazy("discography:login")
     model = Track
     template_name = "discography/new_track.html"
     form_class = TrackForm
@@ -38,7 +42,8 @@ class TrackCreateView(generic.CreateView):
         return redirect("discography:artist_detail", pk=track.artist_id)
 
 
-class ArtistCreateView(generic.CreateView):
+class ArtistCreateView(LoginRequiredMixin, generic.CreateView):
+    login_url = reverse_lazy("discography:login")
     model = Artist
     template_name = "discography/new_artist.html"
     form_class = ArtistForm
@@ -50,3 +55,16 @@ class RegistrationView(generic.CreateView):
     template_name = "discography/registration.html"
     form_class = CustomUserForm
     success_url = reverse_lazy("discography:index")
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect("discography:index")
+
+
+class Login(auth_views.LoginView):
+    template_name = "discography/login.html"
+
+    def get_success_url(self):
+        return reverse_lazy("discography:index")
+
