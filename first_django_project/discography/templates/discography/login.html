@@ -2,9 +2,9 @@
 {% block title %} Registration {% endblock %}
 
 {% block content %}
-<h3>Sign Up</h3>
+<h3>Log In</h3>
 <br> <br>
-<form method="post", autocomplete="off">
+<form method="post">
     {% csrf_token %}
     {{ form }}
     <br> <br>
