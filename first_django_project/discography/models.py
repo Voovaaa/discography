@@ -1,10 +1,15 @@
-from django.db import models
-from django.core.validators import MinLengthValidator
-from django.utils import timezone
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, User
-from string import ascii_lowercase
 from random import choices
+from string import ascii_lowercase
+
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
+from django.db import models
+from django.utils import timezone
 
 
 def validate_date_published(value):
@@ -46,9 +51,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=40, blank=True, unique=True, null=True)
     email = models.EmailField(unique=True)
     objects = CustomUserManager()
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['password']
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["password"]
     is_staff = models.BooleanField(default=False)
 
     def __str__(self):
@@ -66,8 +71,10 @@ class Artist(models.Model):
 
 
 class Track(models.Model):
-    name = models.CharField(max_length=100,
-                            validators=[MinLengthValidator(3, message="Name's len must be more than 2")])
+    name = models.CharField(
+        max_length=100,
+        validators=[MinLengthValidator(3, message="Name's len must be more than 2")],
+    )
     date_published = models.DateField(validators=[validate_date_published])
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="tracks")
 
@@ -75,22 +82,29 @@ class Track(models.Model):
         return f"{self.name}, artist - {self.artist}"
 
     class Meta:
-        unique_together = ('name', 'artist')
-        ordering = ['date_published']
+        unique_together = ("name", "artist")
+        ordering = ["date_published"]
 
 
 class Comment(models.Model):
-    text = models.CharField(max_length=1000,
-                            validators=[MinLengthValidator(3, message="Comment's len must be more than 2")])
+    text = models.CharField(
+        max_length=1000,
+        validators=[MinLengthValidator(3, message="Comment's len must be more than 2")],
+    )
     date_published = models.DateTimeField(auto_now_add=True)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="comments")
-    parent = models.ForeignKey("Comment", on_delete=models.CASCADE,
-                                       related_name="children", blank=True, null=True)
+    artist = models.ForeignKey(
+        Artist, on_delete=models.CASCADE, related_name="comments"
+    )
+    parent = models.ForeignKey(
+        "Comment",
+        on_delete=models.CASCADE,
+        related_name="children",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"id-{self.pk}, artist-{self.artist}"
 
     class Meta:
-        ordering = ['-date_published']
-
-
+        ordering = ["-date_published"]

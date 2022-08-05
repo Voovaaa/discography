@@ -1,15 +1,20 @@
+from http import HTTPStatus
+
 from django.test import TestCase
 from django.urls import reverse
+
 from ..models import Artist, Track
-from http import HTTPStatus
-import datetime as dt
 
 
 class TestArtistDetailView(TestCase):
     def test_get(self):
         artist = Artist.objects.create(name="artist1")
-        track1 = Track.objects.create(name="track1", date_published="0001-1-1", artist=artist)
-        track2 = Track.objects.create(name="track2", date_published="0002-2-2", artist=artist)
+        track1 = Track.objects.create(
+            name="track1", date_published="0001-1-1", artist=artist
+        )
+        track2 = Track.objects.create(
+            name="track2", date_published="0002-2-2", artist=artist
+        )
         url = reverse("discography:artist_detail", args=[artist.pk])
 
         response = self.client.get(url)
@@ -31,7 +36,9 @@ class TestIndexView(TestCase):
         response = self.client.get(url)
 
         expected_artists = list(Artist.objects.values_list("id", flat=True))
-        actual_artists = list(response.context_data["artists"].values_list("id", flat=True))
+        actual_artists = list(
+            response.context_data["artists"].values_list("id", flat=True)
+        )
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, "discography/index.html")
@@ -66,7 +73,9 @@ class TestTrackCreateView(TestCase):
         response = self.client.post(url, data=data)
 
         expected_succes_url = reverse("discography:artist_detail", args=[artist.pk])
-        track_exists = Track.objects.filter(name=name, date_published=date_published, artist=artist).exists()
+        track_exists = Track.objects.filter(
+            name=name, date_published=date_published, artist=artist
+        ).exists()
 
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertTrue(track_exists)

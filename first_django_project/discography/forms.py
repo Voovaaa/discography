@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import forms as auth_forms
-from .models import Track, Artist, Comment, CustomUser
+
+from .models import Artist, Comment, CustomUser, Track
 
 
 class CommentForm(forms.ModelForm):
