@@ -1,31 +1,31 @@
+from django.contrib.auth import login
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.views import generic
-from .models import Artist, Track, CustomUser
-from .forms import TrackForm, ArtistForm, CommentForm, CustomUserForm
-from django.urls import reverse_lazy, reverse
-from django.contrib.auth import views as auth_views
-from django.contrib.auth import login
+
+from .forms import ArtistForm, CommentForm, CustomUserForm, TrackForm
+from .models import Artist, CustomUser, Track
 
 
 class IndexView(generic.ListView):
-    context_object_name = 'artists'
-    template_name = 'discography/index.html'
+    context_object_name = "artists"
+    template_name = "discography/index.html"
     model = Artist
 
 
 class ArtistDetailView(generic.CreateView, generic.DetailView):
-    template_name = 'discography/artist_detail.html'
+    template_name = "discography/artist_detail.html"
     model = Artist
     form_class = CommentForm
 
-
     def form_valid(self, form):
         comment = form.save(commit=False)
-        pk = self.kwargs['pk']
+        pk = self.kwargs["pk"]
         comment.artist_id = pk  # PRIMARY KEY = ID
         comment.save()
-        return redirect('discography:artist_detail', pk=self.kwargs['pk'])
+        return redirect("discography:artist_detail", pk=self.kwargs["pk"])
 
 
 class TrackCreateView(LoginRequiredMixin, generic.CreateView):
@@ -36,7 +36,7 @@ class TrackCreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         track = form.save(commit=False)
-        artist_pk = self.kwargs['pk']
+        artist_pk = self.kwargs["pk"]
         track.artist_id = artist_pk
         track.save()
         return redirect("discography:artist_detail", pk=track.artist_id)
@@ -66,4 +66,3 @@ class Login(auth_views.LoginView):
 
     def get_success_url(self):
         return reverse("discography:index")
-
